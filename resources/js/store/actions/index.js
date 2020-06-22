@@ -1,1 +1,3 @@
-export { enableSolveButton, disableSolveButton, clearSyntaxErrorMessage, setSolution } from './solver-actions';
+export { enableSolveButton, disableSolveButton, clearSyntaxErrorMessage, setSolution, clearSolution,
+  
+ } from './solver-actions';

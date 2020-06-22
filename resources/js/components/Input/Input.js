@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Input.scss';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import * as actions from '../../store/actions/index';
 
 import InputHandler from '../../methods/InputHandler/InputHandler';
@@ -22,12 +23,26 @@ class Input extends Component {
 
   componentDidUpdate() {
     if (!this.state.input) this.props.onClearSyntaxErrorMessage();
-
-    console.log(this.props);
   }
 
   inputHandler(event) {
+    if (!this.state.input && this.props.solution) this.props.onClearSolution();
+
     let input = event.target.value;
+
+    const inputData = {
+      function: input
+    };
+
+    axios.post('http://127.0.0.1:8000/api/solv/fetch', inputData).then(response => {
+      const data = response.data;
+      
+      if (data.success) {
+        this.props.onSetSolution(data.result.function, data.result.solution);
+        // this.setState({ input: '' });
+      }
+    })
+    .catch(error => console.log(error));
 
     this.setState({ input });
 
@@ -41,13 +56,18 @@ class Input extends Component {
     event.preventDefault();
 
     const result = calculate(this.state.input);
-    if (result.success) this.props.onSetSolution(result.solution, this.state.input);
+    if (result.success) {
+      this.props.onSetSolution(result.solution, this.state.input);
+      // this.setState({ input: '' });
+    }
   };
 
   render() {
+    console.log('input', this.state.input)
+    
     let displayInfo;
 
-    if(this.props.solution && !this.props.error && !this.props.syntaxError) {
+    if(this.props.solution && !this.props.syntaxError) {
       displayInfo = (<p className="solution">The <b>root</b> of the function: 
         <b> {this.props.inputFunction}</b> ===>>> <b>{this.props.solution}</b></p>);
     }
@@ -92,7 +112,8 @@ const mapDispatchToProps = dispatch => {
     onEnableSolveButton: () => dispatch(actions.enableSolveButton()),
     onDisableSolveButton: message => dispatch(actions.disableSolveButton(message)),
     onClearSyntaxErrorMessage: () => dispatch(actions.clearSyntaxErrorMessage()),
-    onSetSolution: (solution, inputFunction) => dispatch(actions.setSolution(solution, inputFunction)),
+    onSetSolution: (inputFunction, solution) => dispatch(actions.setSolution(inputFunction, solution)),
+    onClearSolution: () => dispatch(actions.clearSolution()),
   }
 };
 

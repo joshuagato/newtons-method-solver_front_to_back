@@ -22,10 +22,16 @@ export const clearSyntaxErrorMessage = () => {
   };
 }
 
-export const setSolution = (solution, inputFunction) => {
+export const setSolution = (inputFunction, solution) => {
   return {
     type: actionTypes.SET_SOLUTION,
     solution,
     inputFunction
   };
 }
+
+export const clearSolution = () => {
+  return {
+    type: actionTypes.CLEAR_SOLUTION
+  };
+};

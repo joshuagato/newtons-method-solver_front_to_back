@@ -23,6 +23,9 @@ const reducer = (state = initialState, action) => {
       return { ...state, buttonDisabled: true, syntaxError: '', solution: action.solution, 
         inputFunction: action.inputFunction };
     
+    case actionTypes.CLEAR_SOLUTION:
+      return { ...state, buttonDisabled: true, solution: '' };
+    
     default: return state;
   }
 };
