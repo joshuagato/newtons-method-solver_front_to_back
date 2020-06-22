@@ -33,20 +33,4 @@ export const calculate = inputFunction => {
   }
 
   return { success: true, solution: root };
-  // console.log('ROOTS', root);
-
-  // this.setState({ function: func, root: root });
-
-  // const graphqlQuery = {
-  //     query: `
-  //         mutation createNewCalculation($function: String!, $root: Float!) {
-  //             createCalculation(inputData: { function: $function, root: $root })
-  //         }
-  //     `,
-  //     variables: { function: func, root: root }
-  // }
-
-  // axios.post('http://localhost:4005/graphql', graphqlQuery);
-
-  // this.refs.input.value = null;
 }

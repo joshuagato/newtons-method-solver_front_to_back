@@ -27,8 +27,7 @@ class Input extends Component {
   }
 
   inputHandler(event) {
-
-    InputHandler.checkCompletePolynomial(event.target.value);
+    // InputHandler.checkCompletePolynomial(event.target.value);
 
     if (!this.state.input && this.props.solution) {
       this.props.disableSolveButton();
