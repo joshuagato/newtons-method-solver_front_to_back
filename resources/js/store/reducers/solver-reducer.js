@@ -11,20 +11,20 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ENABLE_SOLVE_BUTTON:
-      return { ...state, buttonDisabled: false, syntaxError: action.message };
+      return { ...state, buttonDisabled: false };
 
     case actionTypes.DISABLE_SOLVE_BUTTON:
       return { ...state, buttonDisabled: true, syntaxError: action.message };
     
     case actionTypes.CLEAR_SYNTAX_ERROR_MESSAGE:
-      return { ...state, buttonDisabled: true, syntaxError: '' };
+      return { ...state, syntaxError: '' };
     
     case actionTypes.SET_SOLUTION:
       return { ...state, buttonDisabled: true, syntaxError: '', solution: action.solution, 
         inputFunction: action.inputFunction };
     
     case actionTypes.CLEAR_SOLUTION:
-      return { ...state, buttonDisabled: true, solution: '' };
+      return { ...state, solution: '' };
     
     default: return state;
   }

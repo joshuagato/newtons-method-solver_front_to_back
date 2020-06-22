@@ -14,7 +14,8 @@ class Input extends Component {
     this.state = {
       input: '',
       startmessage: 'Please enter a polynomial function!',
-      errormessage: 'Please enter a polynomial function. E.g 2x^3 + 2x^2 - 4x + 1'
+      errormessage: 'Please enter a polynomial function. E.g 2x^3 + 2x^2 - 4x + 1',
+      completeerror: 'Please complete the polynomial function'
     }
 
     this.inputHandler = this.inputHandler.bind(this);
@@ -26,7 +27,13 @@ class Input extends Component {
   }
 
   inputHandler(event) {
-    if (!this.state.input && this.props.solution) this.props.onClearSolution();
+
+    InputHandler.checkCompletePolynomial(event.target.value);
+
+    if (!this.state.input && this.props.solution) {
+      this.props.disableSolveButton();
+      this.props.onClearSolution();
+    }
 
     let input = event.target.value;
 
@@ -36,10 +43,11 @@ class Input extends Component {
 
     axios.post('http://127.0.0.1:8000/api/solv/fetch', inputData).then(response => {
       const data = response.data;
+
+      if (!data.success && this.state.input && this.props.solution) this.props.onClearSolution();
       
       if (data.success) {
         this.props.onSetSolution(data.result.function, data.result.solution);
-        // this.setState({ input: '' });
       }
     })
     .catch(error => console.log(error));
@@ -48,7 +56,10 @@ class Input extends Component {
 
     const result = InputHandler.processInput(input);
 
-    if (result) this.props.onEnableSolveButton();
+    if (result) {
+      this.props.onClearSyntaxErrorMessage();
+      this.props.onEnableSolveButton();
+    }
     else this.props.onDisableSolveButton(this.state.errormessage);
   };
 
@@ -58,13 +69,26 @@ class Input extends Component {
     const result = calculate(this.state.input);
     if (result.success) {
       this.props.onSetSolution(result.solution, this.state.input);
-      // this.setState({ input: '' });
+
+      const inputData = {
+        function: this.state.input,
+        solution: result.solution
+      };
+      
+      axios.post('http://127.0.0.1:8000/api/solv/store', inputData).then(response => {
+      console.log('store trigerred...');
+      const data = response.data;
+      
+      if (data.success) {
+        console.log('successful')
+      }
+    })
+    .catch(error => console.log(error));
+    
     }
   };
 
   render() {
-    console.log('input', this.state.input)
-    
     let displayInfo;
 
     if(this.props.solution && !this.props.syntaxError) {
@@ -74,11 +98,11 @@ class Input extends Component {
     else if (this.props.syntaxError) {
       displayInfo = (<p className="tip error"><b>{this.props.syntaxError}</b></p>);
     }
-    else if (this.state.input && !this.props.error && !this.props.syntaxError) {
+    else if (this.state.input && !this.props.syntaxError && !this.props.buttonDisabled) {
       displayInfo = (<p className="tip goahead"><b>Please Click on the SOLVE button to CALCULATE</b></p>);
     }
 
-    else {
+    else if (!this.state.input && this.props.buttonDisabled) {
       displayInfo = (<p className="tip start"><b>{this.state.startmessage}</b></p>);
     }
 
