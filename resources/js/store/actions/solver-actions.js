@@ -1,5 +1,4 @@
 import * as actionTypes from './actionTypes';
-// import axios from 'axios';
 
 // Actions for enabling/disabling the solve button
 export const enableSolveButton = () => {

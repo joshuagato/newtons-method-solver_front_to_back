@@ -20,9 +20,13 @@ import ReactDOM from 'react-dom';
 import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
+import axios from 'axios';
 
 import App from './components/App';
 import solverReducer from './store/reducers/solver-reducer';
+
+axios.defaults.baseURL = 'http://127.0.0.1:8000/api';
+// axios.defaults.baseURL = 'http://newtonsmethodsolver.fillycoder.com/api';
 
 const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 

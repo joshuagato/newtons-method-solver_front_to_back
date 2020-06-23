@@ -40,7 +40,7 @@ class Input extends Component {
       function: input
     };
 
-    axios.post('http://127.0.0.1:8000/api/solv/fetch', inputData).then(response => {
+    axios.post('solv/fetch', inputData).then(response => {
       const data = response.data;
 
       if (!data.success && this.state.input && this.props.solution) this.props.onClearSolution();
@@ -74,7 +74,7 @@ class Input extends Component {
         solution: result.solution
       };
       
-      axios.post('http://127.0.0.1:8000/api/solv/store', inputData).then(response => {
+      axios.post('solv/store', inputData).then(response => {
       console.log('store trigerred...');
       const data = response.data;
       
